@@ -16,6 +16,8 @@ exports.registerDoctor = async (req, res) => {
       password,
       clinicName,
       clinicLocation,
+      clinicAreaId,
+      clinicCoordinates,
       specialization,
       age,
       yearsOfExperience,
@@ -36,7 +38,7 @@ exports.registerDoctor = async (req, res) => {
       });
     }
 
-    // Upload signature file to ImageKit
+    // Upload signature file to ImageKit (optional for testing)
     let signatureUrl = '';
     if (req.files && req.files.signature) {
       const signatureFile = req.files.signature[0];
@@ -45,14 +47,9 @@ exports.registerDoctor = async (req, res) => {
         `signature_${Date.now()}${path.extname(signatureFile.originalname)}`
       );
       signatureUrl = signatureResponse.url;
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: 'Signature is required'
-      });
     }
 
-    // Upload profile image to ImageKit
+    // Upload profile image to ImageKit (optional for testing)
     let profileImageUrl = '';
     if (req.files && req.files.profileImage) {
       const profileImageFile = req.files.profileImage[0];
@@ -61,14 +58,9 @@ exports.registerDoctor = async (req, res) => {
         `profile_${Date.now()}${path.extname(profileImageFile.originalname)}`
       );
       profileImageUrl = profileImageResponse.url;
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: 'Profile image is required'
-      });
     }
     
-    // Upload government ID to ImageKit
+    // Upload government ID to ImageKit (optional for testing)
     let governmentIdUrl = '';
     if (req.files && req.files.governmentId) {
       const governmentIdFile = req.files.governmentId[0];
@@ -77,14 +69,9 @@ exports.registerDoctor = async (req, res) => {
         `govid_${Date.now()}${path.extname(governmentIdFile.originalname)}`
       );
       governmentIdUrl = governmentIdResponse.url;
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: 'Government ID is required'
-      });
     }
     
-    // Upload medical license to ImageKit
+    // Upload medical license to ImageKit (optional for testing)
     let medicalLicenseUrl = '';
     if (req.files && req.files.medicalLicense) {
       const medicalLicenseFile = req.files.medicalLicense[0];
@@ -93,11 +80,18 @@ exports.registerDoctor = async (req, res) => {
         `license_${Date.now()}${path.extname(medicalLicenseFile.originalname)}`
       );
       medicalLicenseUrl = medicalLicenseResponse.url;
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: 'Medical license is required'
-      });
+    }
+
+    // Parse coordinates if provided
+    let parsedCoordinates = null;
+    if (clinicCoordinates) {
+      try {
+        parsedCoordinates = typeof clinicCoordinates === 'string' 
+          ? JSON.parse(clinicCoordinates) 
+          : clinicCoordinates;
+      } catch (error) {
+        console.log('Error parsing coordinates:', error);
+      }
     }
 
     // Create doctor
@@ -108,6 +102,8 @@ exports.registerDoctor = async (req, res) => {
       password,
       clinicName,
       clinicLocation,
+      clinicAreaId,
+      clinicCoordinates: parsedCoordinates,
       specialization,
       age,
       yearsOfExperience,
@@ -527,6 +523,29 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error'
+    });
+  }
+};
+
+// @desc    Get all doctors
+// @route   GET /api/doctors/all
+// @access  Public
+exports.getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find({})
+      .select('-password -resetPasswordToken -resetPasswordExpire')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      doctors,
+      message: 'Doctors fetched successfully'
+    });
+  } catch (error) {
+    console.error('Get all doctors error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch doctors'
     });
   }
 };

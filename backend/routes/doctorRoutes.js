@@ -10,7 +10,8 @@ const {
   getPatientHistory,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  getAllDoctors
 } = require('../controllers/doctorController');
 
 // Set up multer for file uploads
@@ -32,5 +33,8 @@ router.get('/me', protect, authorize('doctor'), getMe);
 router.put('/update-profile', protect, authorize('doctor'), uploadFields, updateProfile);
 router.get('/patient-history', protect, authorize('doctor'), getPatientHistory);
 router.get('/logout', protect, authorize('doctor'), logout);
+
+// Public routes for nearby doctors functionality
+router.get('/all', getAllDoctors);
 
 module.exports = router;

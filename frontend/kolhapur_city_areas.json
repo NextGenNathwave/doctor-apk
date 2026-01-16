@@ -1,0 +1,184 @@
+{
+    "kolhapur_city_areas": [
+        {
+            "id": "kol_city_001",
+            "name": "Rajaram Puri",
+            "pincode": "416008",
+            "type": "Residential / Commercial",
+            "coordinates": {
+                "lat": 16.7045,
+                "lon": 74.2433
+            }
+        },
+        {
+            "id": "kol_city_002",
+            "name": "Shahupuri",
+            "pincode": "416001",
+            "type": "Residential / Commercial",
+            "coordinates": {
+                "lat": 16.7078,
+                "lon": 74.2431
+            }
+        },
+        {
+            "id": "kol_city_003",
+            "name": "Tarabai Park",
+            "pincode": "416003",
+            "type": "Premium Residential",
+            "coordinates": {
+                "lat": 16.6877,
+                "lon": 74.251
+            }
+        },
+        {
+            "id": "kol_city_004",
+            "name": "Laxmipuri",
+            "pincode": "416002",
+            "type": "Market / Residential",
+            "coordinates": {
+                "lat": 16.7014,
+                "lon": 74.2409
+            }
+        },
+        {
+            "id": "kol_city_005",
+            "name": "Rajarampuri",
+            "pincode": "416008",
+            "type": "Commercial / Shopping",
+            "coordinates": {
+                "lat": 16.704,
+                "lon": 74.2439
+            }
+        },
+        {
+            "id": "kol_city_006",
+            "name": "Mangalwar Peth",
+            "pincode": "416012",
+            "type": "Market Area",
+            "coordinates": {
+                "lat": 16.7023,
+                "lon": 74.235
+            }
+        },
+        {
+            "id": "kol_city_007",
+            "name": "Shukrawar Peth",
+            "pincode": "416002",
+            "type": "Market / Residential",
+            "coordinates": {
+                "lat": 16.7021,
+                "lon": 74.2374
+            }
+        },
+        {
+            "id": "kol_city_008",
+            "name": "Bhosalewadi",
+            "pincode": "416002",
+            "type": "Residential",
+            "coordinates": {
+                "lat": 16.702,
+                "lon": 74.239
+            }
+        },
+        {
+            "id": "kol_city_009",
+            "name": "Nagadev Wadi",
+            "pincode": "416001",
+            "type": "Residential",
+            "coordinates": {
+                "lat": 16.7111,
+                "lon": 74.2437
+            }
+        },
+        {
+            "id": "kol_city_010",
+            "name": "Pratibha Nagar",
+            "pincode": "416008",
+            "type": "Residential / Commercial",
+            "coordinates": {
+                "lat": 16.7088,
+                "lon": 74.26
+            }
+        },
+        {
+            "id": "kol_city_011",
+            "name": "Sane Guruji Vasahat",
+            "pincode": "416011",
+            "type": "Residential",
+            "coordinates": {
+                "lat": 16.7004,
+                "lon": 74.27
+            }
+        },
+        {
+            "id": "kol_city_012",
+            "name": "Vidyapeeth Colony",
+            "pincode": "416004",
+            "type": "Residential",
+            "coordinates": {
+                "lat": 16.6802,
+                "lon": 74.2442
+            }
+        },
+        {
+            "id": "kol_city_013",
+            "name": "Shivaji Peth",
+            "pincode": "416012",
+            "type": "Market / Residential",
+            "coordinates": {
+                "lat": 16.702,
+                "lon": 74.231
+            }
+        },
+        {
+            "id": "kol_city_014",
+            "name": "R K Nagar",
+            "pincode": "416013",
+            "type": "Residential",
+            "coordinates": {
+                "lat": 16.7167,
+                "lon": 74.259
+            }
+        },
+        {
+            "id": "kol_city_015",
+            "name": "Phulewadi",
+            "pincode": "416010",
+            "type": "Residential",
+            "coordinates": {
+                "lat": 16.685,
+                "lon": 74.2269
+            }
+        },
+        {
+            "id": "kol_city_016",
+            "name": "Kasba Bawada",
+            "pincode": "416006",
+            "type": "Residential",
+            "coordinates": {
+                "lat": 16.6901,
+                "lon": 74.2525
+            }
+        },
+        {
+            "id": "kol_city_017",
+            "name": "Ujlaiwadi",
+            "pincode": "416004",
+            "type": "Residential / Airport Zone",
+            "coordinates": {
+                "lat": 16.66,
+                "lon": 74.27
+            }
+        },
+        {
+            "id": "kol_city_018",
+            "name": "Sambhaji Nagar",
+            "pincode": "416012",
+            "type": "Residential",
+            "coordinates": {
+                "lat": 16.712,
+                "lon": 74.2305
+            }
+        }
+    ]
+}

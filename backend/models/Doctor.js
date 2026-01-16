@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken');
 const DoctorSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, 'First name is required'],
+    required: false,
     trim: true
   },
   lastName: {
     type: String,
-    required: [true, 'Last name is required'],
+    required: false,
     trim: true
   },
   email: {
@@ -29,57 +29,72 @@ const DoctorSchema = new mongoose.Schema({
   },
   clinicName: {
     type: String,
-    required: [true, 'Clinic name is required'],
+    required: false,
     trim: true
   },
   clinicLocation: {
     type: String,
-    required: [true, 'Clinic location is required'],
+    required: false,
     trim: true
+  },
+  clinicAreaId: {
+    type: String,
+    required: false,
+    trim: true
+  },
+  clinicCoordinates: {
+    lat: {
+      type: Number,
+      required: false
+    },
+    lon: {
+      type: Number,
+      required: false
+    }
   },
   specialization: {
     type: String,
-    required: [true, 'Specialization is required'],
+    required: false,
     trim: true
   },
   age: {
     type: Number,
-    required: [true, 'Age is required']
+    required: false
   },
   yearsOfExperience: {
     type: Number,
-    required: [true, 'Years of experience is required']
+    required: false
   },
   gender: {
     type: String,
-    required: [true, 'Gender is required'],
+    required: false,
     enum: ['Male', 'Female', 'Other']
   },
   qualification: {
     type: String,
-    required: [true, 'Qualification is required'],
+    required: false,
     trim: true
   },
   clinicNumber: {
     type: String,
-    required: [true, 'Clinic number is required'],
+    required: false,
     trim: true
   },
   governmentId: {
     type: String,
-    required: [true, 'Government ID is required']
+    required: false
   },
   medicalLicense: {
     type: String,
-    required: [true, 'Medical license is required']
+    required: false
   },
   signature: {
     type: String,
-    required: [true, 'Signature is required']
+    required: false
   },
   profileImage: {
     type: String,
-    required: [true, 'Profile image is required']
+    required: false
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,

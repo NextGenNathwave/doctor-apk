@@ -55,6 +55,21 @@ const PatientSchema = new mongoose.Schema({
     required: [true, 'Address is required'],
     trim: true
   },
+  areaId: {
+    type: String,
+    required: false,
+    trim: true
+  },
+  coordinates: {
+    lat: {
+      type: Number,
+      required: false
+    },
+    lon: {
+      type: Number,
+      required: false
+    }
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {

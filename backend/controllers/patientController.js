@@ -1,6 +1,117 @@
 const Patient = require('../models/Patient');
-const { sendPasswordResetEmail } = require('../config/email');
 const crypto = require('crypto');
+const { sendPasswordResetEmail, sendWelcomeEmail } = require('../config/email');
+
+// @desc    Get all patients
+// @route   GET /api/patients
+// @access  Private (Doctor only)
+exports.getAllPatients = async (req, res) => {
+  try {
+    const patients = await Patient.find({}).select('-password -resetPasswordToken -resetPasswordExpire');
+    
+    res.status(200).json({
+      success: true,
+      count: patients.length,
+      patients: patients
+    });
+  } catch (error) {
+    console.error('Error fetching patients:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching patients'
+    });
+  }
+};
+
+// @desc    Get patient by ID or patientId
+// @route   GET /api/patients/:id
+// @access  Private (Doctor only)
+exports.getPatientById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Try to find by MongoDB _id first, then by patientId
+    let patient = await Patient.findById(id).select('-password -resetPasswordToken -resetPasswordExpire');
+    
+    if (!patient) {
+      // Try to find by patientId field
+      patient = await Patient.findOne({ patientId: id }).select('-password -resetPasswordToken -resetPasswordExpire');
+    }
+    
+    if (!patient) {
+      return res.status(404).json({
+        success: false,
+        message: 'Patient not found'
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      patient: patient
+    });
+  } catch (error) {
+    console.error('Error fetching patient:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching patient'
+    });
+  }
+};
+
+// @desc    Search patients by patientId, name, or email
+// @route   GET /api/patients/search
+// @access  Private (Doctor only)
+exports.searchPatients = async (req, res) => {
+  try {
+    const { patientId, name, email } = req.query;
+    
+    let searchQuery = {};
+    
+    if (patientId) {
+      searchQuery.patientId = { $regex: patientId, $options: 'i' };
+    }
+    
+    if (name) {
+      searchQuery.$or = [
+        { firstName: { $regex: name, $options: 'i' } },
+        { lastName: { $regex: name, $options: 'i' } }
+      ];
+    }
+    
+    if (email) {
+      searchQuery.email = { $regex: email, $options: 'i' };
+    }
+    
+    const patients = await Patient.find(searchQuery).select('-password -resetPasswordToken -resetPasswordExpire');
+    
+    if (patients.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No patients found matching the search criteria'
+      });
+    }
+    
+    // If searching by exact patientId, return single patient
+    if (patientId && patients.length === 1) {
+      return res.status(200).json({
+        success: true,
+        patient: patients[0]
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      count: patients.length,
+      patients: patients
+    });
+  } catch (error) {
+    console.error('Error searching patients:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while searching patients'
+    });
+  }
+};
 
 // @desc    Register a patient
 // @route   POST /api/patients/register
@@ -16,7 +127,9 @@ exports.registerPatient = async (req, res) => {
       age,
       gender,
       bloodGroup,
-      address
+      address,
+      areaId,
+      coordinates
     } = req.body;
 
     // Check if patient already exists
@@ -45,6 +158,18 @@ exports.registerPatient = async (req, res) => {
       }
     }
     
+    // Parse coordinates if provided
+    let parsedCoordinates = null;
+    if (coordinates) {
+      try {
+        parsedCoordinates = typeof coordinates === 'string' 
+          ? JSON.parse(coordinates) 
+          : coordinates;
+      } catch (error) {
+        console.log('Error parsing coordinates:', error);
+      }
+    }
+
     // Create patient with the generated ID
     const patient = await Patient.create({
       patientId,
@@ -56,11 +181,22 @@ exports.registerPatient = async (req, res) => {
       age,
       gender,
       bloodGroup,
-      address
+      address,
+      areaId,
+      coordinates: parsedCoordinates
     });
 
     // Generate token
     const token = patient.getSignedJwtToken();
+
+    // Send welcome email (don't wait for it to complete)
+    try {
+      await sendWelcomeEmail(patient.email, patient.firstName, patient.patientId);
+      console.log(`Welcome email sent to ${patient.email}`);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError.message);
+      // Don't fail registration if email fails
+    }
 
     res.status(201).json({
       success: true,
@@ -70,7 +206,10 @@ exports.registerPatient = async (req, res) => {
         patientId: patient.patientId,
         firstName: patient.firstName,
         lastName: patient.lastName,
-        email: patient.email
+        email: patient.email,
+        areaId: patient.areaId,
+        coordinates: patient.coordinates,
+        address: patient.address
       }
     });
   } catch (error) {
@@ -128,7 +267,10 @@ exports.loginPatient = async (req, res) => {
         patientId: patient.patientId,
         firstName: patient.firstName,
         lastName: patient.lastName,
-        email: patient.email
+        email: patient.email,
+        areaId: patient.areaId,
+        coordinates: patient.coordinates,
+        address: patient.address
       }
     });
   } catch (error) {
